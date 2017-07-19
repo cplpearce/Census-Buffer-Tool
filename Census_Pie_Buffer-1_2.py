@@ -30,14 +30,14 @@ arcpy.env.overwriteOutput = True
 strMGRS = arcpy.GetParameterAsText(0).upper()
 # buffer distance in kilometers
 strBuffDistance = arcpy.GetParameterAsText(1)
-# create the output reference
-dirOutput = arcpy.GetParameterAsText(2)
+# get the output dir and shapefile name
+dirOutput, strOutput = os.path.split(arcpy.GetParameterAsText(2))
+# get the output directory
+shpOutput = arcpy.GetParameterAsText(2)
 # defines number of slices to cut each circle.
 strNumSlices = arcpy.GetParameter(3) 
 # census shapefile
 shpCensus = arcpy.GetParameterAsText(4) 
-# output shapefile name
-strOutput = arcpy.GetParameterAsText(5)
 
 # set workspace
 arcpy.AddMessage("writing to in_memory")
@@ -195,8 +195,8 @@ arcpy.AddMessage("calculate new population of buffer (as some census DAs are spl
 time.sleep(.06)
 arcpy.AddMessage("\n")
 # take your {population}, multiplied by the new {intersected area} divided by the {oringial area}
-sExpressionType = "int([Population] * ( [NewSqKm] / [SqKm] ))"
-arcpy.CalculateField_management(shpCensusOutput, "PopIn", sExpressionType)
+strExpressionType = "int([Population] * ( [NewSqKm] / [SqKm] ))"
+arcpy.CalculateField_management(shpCensusOutput, "PopIn", strExpressionType)
 
 # dissolve pie wedges into population
 arcpy.AddMessage("dissolve pie wedges into population")
@@ -204,7 +204,13 @@ time.sleep(.06)
 arcpy.AddMessage("\n")
 # FYI Dissolve_management (in_features, out_feature_class, {dissolve_field}, {statistics_fields}, {multi_part}, {unsplit_lines})
 # http://pro.arcgis.com/en/pro-app/tool-reference/data-management/dissolve.htm
-arcpy.Dissolve_management(shpCensusOutput, "shpOutputShapefilePieWedge", "FID_out_pie", "PopIn SUM", "MULTI_PART", "DISSOLVE_LINES")
+arcpy.Dissolve_management(shpCensusOutput, shpOutput, "FID_out_pie", "PopIn SUM", "MULTI_PART", "DISSOLVE_LINES")
+
+# copy shapefile shpOutputShapefilePieWedge locally
+arcpy.AddMessage("copy  output shapefile pie wedge locally")
+time.sleep(.06)
+arcpy.AddMessage("\n")
+arcpy.CopyFeatures_management(shpOutput, dirOutput)
 
 # report a success message
 arcpy.AddMessage("Analysis finished!")
@@ -226,5 +232,4 @@ arcpy.AddMessage("X         / / ` /_ . _ _  _  /             x")
 arcpy.AddMessage("X        . /_, / // / / //_/.              X")
 arcpy.AddMessage("X                                          X")
 arcpy.AddMessage("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-arcpy.AddMessage("\n")
-arcpy.AddMessage("\n")                                  
+arcpy.AddMessage("\n")                               
