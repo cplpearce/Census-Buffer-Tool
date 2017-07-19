@@ -1,4 +1,4 @@
-# Census-Buffer-Tool
+# Census-Buffer-Tool VERSION 1.2
 Arcpy Census Buffer Tool
 Uses Canadian Census data as an input, along with an MGRS point, buffer, and output to create a final estimated population buffer.
 
@@ -32,4 +32,4 @@ Any Government agency.
 
 
 Syntax
-CensusBuffer (Origin_MGRS, Distance__Kilometers_, Output__Location, Buffer_Slices, Census_Data, Shapefile_Name)
+CensusBuffer (Origin_MGRS, Distance__Kilometers_, Output__Shapefile, Buffer_Slices, Census_Data)
