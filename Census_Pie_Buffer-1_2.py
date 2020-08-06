@@ -3,7 +3,7 @@ import math
 import os
 
 # population estimation tool
-# written @ CJIRU CANSOFCOM
+# written @ 
 # written by Cpl C Pearce
 # written 2017 July 04
 arcpy.AddMessage("   __   ___   _  __    ___  _ __    ___        ___    __   ___  ")
